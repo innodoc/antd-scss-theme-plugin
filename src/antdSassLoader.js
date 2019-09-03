@@ -45,18 +45,21 @@ export const overloadSassLoaderOptions = async (options) => {
   const contents = await compileThemeVariables(scssThemePath);
   const extraImporter = themeImporter(scssThemePath, contents);
 
-  let importer;
-  if ('importer' in options) {
-    if (Array.isArray(options.importer)) {
-      importer = [...options.importer, extraImporter];
+  const sassOptions = 'sassOptions' in options
+    ? { ...options.sassOptions }
+    : {};
+
+  if ('importer' in sassOptions) {
+    if (Array.isArray(sassOptions.importer)) {
+      sassOptions.importer = [...sassOptions.importer, extraImporter];
     } else {
-      importer = [options.importer, extraImporter];
+      sassOptions.importer = [sassOptions.importer, extraImporter];
     }
   } else {
-    importer = extraImporter;
+    sassOptions.importer = extraImporter;
   }
 
-  newOptions.importer = importer;
+  newOptions.sassOptions = sassOptions;
 
   return newOptions;
 };
